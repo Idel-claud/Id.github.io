@@ -60,6 +60,8 @@ const ss=(f,i,el)=>{if(f=='n')S.n[i]=el.value;else if(f=='md')S.md=num(el.value)
 const sy=n=>{S.y+=n;save();R()},tg=d=>{open.has(d)?open.delete(d):open.add(d);R()};
 const stt=(i,c,el)=>{S.tr[i][c]=c?num(el.value):num(el.value)/100;save();R()};
 const sp=(r,c,el)=>{const v=el.value.trim();S.pen[r][c]=(v===''||v=='*')?null:num(v);save();R()};
+const exp=()=>{const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fusionador-copia-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+const imp=el=>{const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!d.m||!d.n||!d.tr||!d.pen||!d.ob)throw 0;if(!confirm('Esto reemplazará todos los datos actuales. ¿Continuar?')){el.value='';return}S=d;save();R();alert('Copia importada.')}catch(e){alert('El archivo no es una copia válida.')}};r.readAsText(f)};
 // ---- vistas
 const inp=(l,v,fn)=>`<label class=f>${l}<input inputmode=decimal value="${v||''}" onchange="${fn}"></label>`;
 const lbl=d=>new Date(d+'T12:00').toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'2-digit'});
@@ -92,7 +94,7 @@ return`<div class=c><h3>Ajustes</h3><div class=row><button class=chip onclick="s
 function vTablas(){return`<div class=c><h3>Gratificación por consecución</h3>${S.tr.map((t,i)=>`<div class=row>${inp('Desde (%)',Math.round(t[0]*10000)/100,`stt(${i},0,this)`)}${inp('Importe €',t[1],`stt(${i},1,this)`)}</div>`).join('')}</div>
 <div class=c><h3>Penalización por reparos (€)</h3><small>0 = solo aviso · * = sin importe fijado</small>${S.pen.map((r,i)=>`<b>${i+1} reparo(s)${i==4?' o más':''}</b><div class=row>${r.map((v,j)=>`<label class=f>${['Baja','Media','Alta'][j]}<input value="${v==null?'*':v}" onchange="sp(${i},${j},this)"></label>`).join('')}</div>`).join('')}</div>
 <div class=c><h3>Objetivo diario por persona</h3><div class=row>${C.map((c,i)=>inp(c,S.ob[i],`ss('ob',${i},this)`)).join('')}</div></div>
-<div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div>`}
+<div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div><div class=c><h3>Copia de seguridad</h3><small>Los datos solo están en este dispositivo. Descarga una copia para guardarla o pasarla a otro móvil.</small><br><div class=row><button class=chip onclick="exp()">⬇ Exportar copia</button><label class=chip>⬆ Importar copia<input type=file accept=".json,application/json" hidden onchange="imp(this)"></label></div></div>`}
 function R(){const T={r:'Resumen anual',m:'Meses',t:'Tablas'};ti.textContent=mo?M[mo-1]+' '+S.y:T[tab];bk.hidden=!mo;
 app.innerHTML=mo?vMes():tab=='r'?vRes12():tab=='m'?vLista():vTablas();
 nv.innerHTML=[['r','Resumen'],['m','Meses'],['t','Tablas']].map(x=>`<button class="${tab==x[0]&&!mo?'on':''}" onclick="tab='${x[0]}';mo=0;R()">${x[1]}</button>`).join('')}
