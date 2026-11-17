@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F4E9E"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Variable Fusionador</title>
+<style>
+:root{--a:#1F4E9E;--o:#E9EEF6}*{box-sizing:border-box}
+body{margin:0;font:14px system-ui,sans-serif;color:#1b1b1b;background:#f4f6fa;padding-bottom:64px}
+header{background:var(--a);color:#fff;padding:14px 12px;font-size:18px;font-weight:700;position:sticky;top:0;z-index:5}
+header button{float:right;background:none;border:0;color:#fff;font-size:18px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid #ccc;z-index:5}
+nav button{flex:1;padding:14px 0;border:0;background:none;font-size:14px}nav .on{color:var(--a);font-weight:700;border-top:3px solid var(--a)}
+main{padding:10px;max-width:760px;margin:auto}
+.c{background:#fff;border-radius:10px;padding:10px;margin:0 0 10px;box-shadow:0 1px 3px #0002}
+.c.o{background:var(--o)}.c.e{background:#d32f2f;color:#fff}.h{display:flex;justify-content:space-between;cursor:pointer}
+h3{margin:2px 0 8px;color:var(--a)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.f{display:flex;flex-direction:column;flex:1;min-width:110px;font-size:11px;margin:3px 0}
+input,textarea,select{font:inherit;padding:7px;border:1px solid #999;border-radius:6px;width:100%}
+input[type=checkbox]{width:auto}.sp{display:flex;justify-content:space-between;padding:2px 0}
+.t{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}td,th{padding:5px;white-space:nowrap;text-align:right}
+th{background:var(--a);color:#fff}td:first-child,th:first-child{text-align:left}tr:nth-child(even) td{background:var(--o)}tr.tot td{font-weight:700;background:#cfe0f5}
+.g{color:#2e7d32}.y{color:#f9a825}.r{color:#d32f2f}.chip{padding:6px 12px;border:1px solid var(--a);border-radius:16px;background:#fff;margin-right:6px}
+.chip.on{background:var(--a);color:#fff}small{display:block}.bar{overflow-x:auto}
+.tabs{display:flex;margin-bottom:8px}.tabs button{flex:1;padding:10px;border:0;border-bottom:3px solid #ccc;background:none}.tabs .on{border-color:var(--a);font-weight:700}
+</style></head><body>
+<header><span id="ti"></span><button id="bk" onclick="mo=0;R()" hidden>←</button></header>
+<main id="app"></main>
+<nav id="nv"></nav>
+<script>
+const C=["CTO interior","CTO int. demanda","CTO fachada","CTO arqueta","CTO poste","CTO azotea","CTO patio","CDPs","Empalmes","Fusiones","Potencia"];
+const M=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DEF={y:new Date().getFullYear(),n:["Trabajador 1","Trabajador 2","Trabajador 3"],b:[0,0,0],
+tr:[[0,0],[.6,0],[1,0],[1.1,100],[1.2,200],[1.3,300],[1.4,400]],
+pen:[[0,0,200],[0,100,300],[0,200,400],[0,300,null],[0,400,null]],ob:[2,3,4.5,3,5,5,5,7.5,4,90,30],md:15,m:{}};
+let S;try{S=JSON.parse(localStorage.getItem('fv1'))}catch(e){}S=S||DEF;
+let tab='r',mo=0,sub='g',wk=0,open=new Set();
+const save=()=>localStorage.setItem('fv1',JSON.stringify(S)),p2=n=>String(n).padStart(2,'0'),ym=(y,m)=>y+'-'+p2(m);
+const num=v=>+String(v).replace(',','.')||0,esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const eur=v=>v.toLocaleString('es-ES',{style:'currency',currency:'EUR'}),pc=v=>(v*100).toFixed(1).replace('.',',')+' %',nf=v=>v.toLocaleString('es-ES',{maximumFractionDigits:2});
+const ic=p=>p==null?'':p>=1.1?'<b class=g>✔</b>':p>=1?'<b class=y>⚠</b>':'<b class=r>✖</b>';
+const mk=()=>({w:[0,0,0].map(_=>false),md:[false,false,false],di:[0,0,0],hx:[0,0,0],p:Array(11).fill(0),n:''});
+const gm=k=>S.m[k]||(S.m[k]={t:[0,1,2].map(_=>({v:null,ca:false,sa:false,rp:0,tp:1})),d:{}});
+const gd=(k,dt)=>{const m=gm(k);return m.d[dt]||(m.d[dt]=mk())};
+const wd=(y,m)=>{const r=[];for(let d=1;d<=new Date(y,m,0).getDate();d++)if(new Date(y,m-1,d).getDay()%6)r.push(ym(y,m)+'-'+p2(d));return r};
+const nt=d=>d.w.filter(Boolean).length;
+const pd=d=>{const n=nt(d);return n?d.p.reduce((s,v,k)=>s+(S.ob[k]?v/S.ob[k]:0),0)/n:null};
+function calc(m,w){const ds=m?Object.values(m.d):[],t=m?m.t[w]:{},dt=ds.filter(d=>d.w[w]).length;
+const cs=C.map((_,k)=>{const o=S.ob[k]*dt;let me=0;ds.forEach(d=>{const n=nt(d);if(n&&d.w[w])me+=d.p[k]/n});return{o,me,p:o?me/o:0}});
+const T=cs.reduce((s,c)=>s+c.p,0),base=t.v!=null?t.v:S.b[w],ord=t.ca?base:T<.6?0:base*Math.min(T,1);
+const so=(t.sa||dt<15)?0:([...S.tr].reverse().find(x=>T>=x[0])||[0,0])[1],ant=ord+so;
+const pe=!t.rp?0:Math.min(ant,((S.pen[Math.min(t.rp,5)-1]||[])[(t.tp||1)-1])||0);
+const dm=ds.filter(d=>d.w[w]&&d.md[w]).length,me=dm*S.md,di=ds.reduce((s,d)=>s+d.di[w],0);
+return{dt,cs,T,ord,so,ant,pe,tr:ant-pe,dm,me,di,tot:ant-pe+me+di,hx:ds.reduce((s,d)=>s+d.hx[w],0),dh:ds.filter(d=>d.hx[w]>0).length}}
+const prod=m=>C.map((_,k)=>m?Object.values(m.d).reduce((s,d)=>s+d.p[k],0):0);
+// ---- setters
+const sd=(k,dt,f,i,el)=>{const d=gd(k,dt);const v=el.type=='checkbox'?el.checked:f=='n'?el.value:num(el.value);i<0?d[f]=v:d[f][i]=v;save();R()};
+const st=(k,w,f,el)=>{const t=gm(k).t[w];t[f]=el.type=='checkbox'?el.checked:f=='v'?(el.value===''?null:num(el.value)):num(el.value);save();R()};
+const ss=(f,i,el)=>{if(f=='n')S.n[i]=el.value;else if(f=='md')S.md=num(el.value);else S[f][i]=num(el.value);save();R()};
+const sy=n=>{S.y+=n;save();R()},tg=d=>{open.has(d)?open.delete(d):open.add(d);R()};
+const stt=(i,c,el)=>{S.tr[i][c]=c?num(el.value):num(el.value)/100;save();R()};
+const sp=(r,c,el)=>{const v=el.value.trim();S.pen[r][c]=(v===''||v=='*')?null:num(v);save();R()};
+// ---- vistas
+const inp=(l,v,fn)=>`<label class=f>${l}<input inputmode=decimal value="${v||''}" onchange="${fn}"></label>`;
+const lbl=d=>new Date(d+'T12:00').toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'2-digit'});
+const COL=['#1F4E9E','#E67E22','#2E7D32','#C62828','#6A1B9A','#00838F','#8D6E63','#AD1457','#9E9D24','#455A64'];
+function bars(t,lb,se){const mx=Math.max(1,...se.flatMap(s=>s.v)),gw=se.length*11+10,W=lb.length*gw+10,H=150;
+let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+34} font-size=9>`;
+lb.forEach((l,i)=>{se.forEach((q,j)=>{const h=q.v[i]/mx*H;s+=`<rect x=${i*gw+5+j*11} y=${H+14-h} width=10 height=${h} fill=${COL[j%10]}></rect>`});s+=`<text x=${i*gw+5} y=${H+28}>${l}</text>`});
+return s+`</svg></div><small>${se.map((q,j)=>`<span style="color:${COL[j%10]}">■</span> ${esc(q.n)}`).join(' &nbsp;')}</small>`}
+function dayCard(k,dt,i){const d=(S.m[k]&&S.m[k].d[dt])||mk(),n=nt(d),p=pd(d),er=!n&&d.p.some(v=>v>0),op=open.has(dt),a=`'${k}','${dt}'`;
+let h=`<div class="c ${er?'e':i%2?'o':''}"><div class=h onclick="tg('${dt}')"><b>${lbl(dt)}</b><span>${n} trab. ${ic(p)} ${p==null?'':pc(p)} ${op?'▲':'▼'}</span></div>`;
+if(er)h+='<small>Hay producción pero no has marcado a ningún trabajador</small>';
+if(d.n&&!op)h+=`<small>📝 ${esc(d.n)}</small>`;
+if(op){for(let w=0;w<3;w++)h+=`<b>${esc(S.n[w])}</b><div class=row><label><input type=checkbox ${d.w[w]?'checked':''} onchange="sd(${a},'w',${w},this)"> Trabaja</label><label><input type=checkbox ${d.md[w]?'checked':''} onchange="sd(${a},'md',${w},this)"> Media dieta</label>${inp('Dieta €',d.di[w],`sd(${a},'di',${w},this)`)}${inp('Horas extra',d.hx[w],`sd(${a},'hx',${w},this)`)}</div>`;
+h+='<b>Producción del equipo</b><div class=row>'+C.map((c,j)=>inp(c,d.p[j],`sd(${a},'p',${j},this)`)).join('')+`</div><label class=f>Observaciones<textarea onchange="sd(${a},'n',-1,this)">${esc(d.n)}</textarea></label>`}
+return h+'</div>'}
+function vReg(k,m){const mm=S.m[k]||gm(k)&&S.m[k];let h='<div class=c><h3>Datos del mes</h3>';
+for(let w=0;w<3;w++){const t=mm.t[w];h+=`<b>${esc(S.n[w])}</b><div class=row>${inp('Variable € (vacío = '+eur(S.b[w])+')',t.v,`st('${k}',${w},'v',this)`)}${inp('Reparos',t.rp,`st('${k}',${w},'rp',this)`)}<label class=f>Tipología<select onchange="st('${k}',${w},'tp',this)">${[1,2,3].map(x=>`<option value=${x} ${t.tp==x?'selected':''}>${['Baja','Media','Alta'][x-1]}</option>`).join('')}</select></label></div><div class=row><label><input type=checkbox ${t.ca?'checked':''} onchange="st('${k}',${w},'ca',this)"> Falta de trabajo / causa ajena</label><label><input type=checkbox ${t.sa?'checked':''} onchange="st('${k}',${w},'sa',this)"> Sancionado empleo y sueldo</label></div>`}
+return h+'</div><small>Toca un día para editarlo. Fila roja = hay producción y nadie marcado. ✖ &lt;100 % · ⚠ 100–110 % · ✔ ≥110 %</small><br>'+wd(S.y,m).map((d,i)=>dayCard(k,d,i)).join('')}
+function vRes(m){return[0,1,2].map(w=>{const r=calc(m,w);return`<div class=c><h3>${esc(S.n[w])} ${r.dt?ic(r.T)+' '+pc(r.T):''}</h3>`+[['Días trabajados',r.dt],['Variable ordinario',eur(r.ord)],['Sobreproducción',eur(r.so)],['Penalización reparos',eur(r.pe)],['Variable tras penalización',eur(r.tr)],['Media dieta ('+r.dm+' días)',eur(r.me)],['Dietas',eur(r.di)],['TOTAL A COBRAR (nómina mes siguiente)',eur(r.tot)],['Horas extra ('+r.dh+' días)',nf(r.hx)]].map(x=>`<div class=sp><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')+`<div class=t><table><tr><th>Concepto<th>Medición<th>Objetivo<th>%</tr>${r.cs.map((c,i)=>`<tr><td>${C[i]}<td>${nf(c.me)}<td>${nf(c.o)}<td>${pc(c.p)}`).join('')}</table></div></div>`}).join('')}
+function vTot(m){const t=prod(m),ix=C.map((_,i)=>i).filter(i=>i!=9);return`<div class=c><h3>Totales del mes (equipo)</h3>${C.map((c,i)=>`<div class=sp><span>${c}</span><b>${nf(t[i])}</b></div>`).join('')}</div><div class=c>${bars('Total: CTOs, CDPs, empalmes y potencia',ix.map(i=>C[i]),[{n:'Total',v:ix.map(i=>t[i])}])}${bars('Fusiones del mes',['Fusiones'],[{n:'Fusiones',v:[t[9]]}])}</div>`}
+function vMes(){const k=ym(S.y,mo),m=S.m[k];return`<div class=tabs>${[['g','Registro'],['r','Resultado'],['t','Totales']].map(x=>`<button class="${sub==x[0]?'on':''}" onclick="sub='${x[0]}';R()">${x[1]}</button>`).join('')}</div>`+(sub=='g'?vReg(k,mo):sub=='r'?vRes(m):vTot(m))}
+function vLista(){return M.map((n,i)=>{const m=S.m[ym(S.y,i+1)];return`<div class=c onclick="mo=${i+1};sub='g';R()"><b>${n}</b>${[0,1,2].map(w=>{const r=calc(m,w);return`<div class=sp><span>${esc(S.n[w])}</span><span>${r.dt?ic(r.T)+' '+pc(r.T)+' &nbsp;':''}<b>${eur(r.tot)}</b></span></div>`}).join('')}</div>`}).join('')}
+function vRes12(){const yr=w=>M.map((_,i)=>calc(S.m[ym(S.y,i+1)],w)),Y=yr(wk),a=Y.filter(r=>r.dt),su=f=>Y.reduce((s,r)=>s+r[f],0),all=[0,1,2].map(yr),pr=M.map((_,i)=>prod(S.m[ym(S.y,i+1)]));
+const avg=a.length?a.reduce((s,r)=>s+r.T,0)/a.length:null,best=a.length?a.reduce((b,r)=>r.T>b.T?r:b):null;
+return`<div class=c><h3>Ajustes</h3><div class=row><button class=chip onclick="sy(-1)">–</button><b>${S.y}</b><button class=chip onclick="sy(1)">+</button></div>${[0,1,2].map(i=>`<div class=row><label class=f>Nombre<input value="${esc(S.n[i])}" onchange="ss('n',${i},this)"></label>${inp('Variable 100 % (€)',S.b[i],`ss('b',${i},this)`)}</div>`).join('')}</div>
+<div>${[0,1,2].map(i=>`<button class="chip ${wk==i?'on':''}" onclick="wk=${i};R()">${esc(S.n[i])}</button>`).join('')}</div><br>
+<div class=c><h3>Año ${S.y} – ${esc(S.n[wk])}</h3><div class=t><table><tr><th>Mes<th>Días<th>H.extra<th>Consec.<th>Variable<th>M.dieta<th>Dietas<th>TOTAL</tr>${Y.map((r,i)=>`<tr><td>${M[i]}<td>${r.dt}<td>${nf(r.hx)}<td>${r.dt?ic(r.T)+' '+pc(r.T):''}<td>${eur(r.tr)}<td>${eur(r.me)}<td>${eur(r.di)}<td><b>${eur(r.tot)}</b>`).join('')}<tr class=tot><td>TOTAL<td>${su('dt')}<td>${nf(su('hx'))}<td>${avg==null?'':ic(avg)+' '+pc(avg)}<td>${eur(su('tr'))}<td>${eur(su('me'))}<td>${eur(su('di'))}<td>${eur(su('tot'))}</tr></table></div><small>Las horas extra solo se registran (no suman al total).</small></div>
+<div class=c><h3>Estadísticas</h3><div class=sp><span>Mejor mes</span><b>${best?M[Y.indexOf(best)]+' ('+pc(best.T)+')':'-'}</b></div><div class=sp><span>Meses con 100 % o más</span><b>${a.filter(r=>r.T>=1).length}</b></div><div class=sp><span>TOTAL EQUIPO a cobrar en el año</span><b>${eur(all.reduce((s,y)=>s+y.reduce((q,r)=>q+r.tot,0),0))}</b></div></div>
+<div class=c>${bars('Consecución mensual (%)',M.map(x=>x.slice(0,3)),[0,1,2].map(w=>({n:S.n[w],v:all[w].map(r=>r.dt?r.T*100:0)})))}${bars('Total a cobrar (€)',M.map(x=>x.slice(0,3)),[0,1,2].map(w=>({n:S.n[w],v:all[w].map(r=>r.tot)})))}${bars('Fusiones por mes',M.map(x=>x.slice(0,3)),[{n:'Fusiones',v:pr.map(p=>p[9])}])}</div>`}
+function vTablas(){return`<div class=c><h3>Gratificación por consecución</h3>${S.tr.map((t,i)=>`<div class=row>${inp('Desde (%)',Math.round(t[0]*10000)/100,`stt(${i},0,this)`)}${inp('Importe €',t[1],`stt(${i},1,this)`)}</div>`).join('')}</div>
+<div class=c><h3>Penalización por reparos (€)</h3><small>0 = solo aviso · * = sin importe fijado</small>${S.pen.map((r,i)=>`<b>${i+1} reparo(s)${i==4?' o más':''}</b><div class=row>${r.map((v,j)=>`<label class=f>${['Baja','Media','Alta'][j]}<input value="${v==null?'*':v}" onchange="sp(${i},${j},this)"></label>`).join('')}</div>`).join('')}</div>
+<div class=c><h3>Objetivo diario por persona</h3><div class=row>${C.map((c,i)=>inp(c,S.ob[i],`ss('ob',${i},this)`)).join('')}</div></div>
+<div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div>`}
+function R(){const T={r:'Resumen anual',m:'Meses',t:'Tablas'};ti.textContent=mo?M[mo-1]+' '+S.y:T[tab];bk.hidden=!mo;
+app.innerHTML=mo?vMes():tab=='r'?vRes12():tab=='m'?vLista():vTablas();
+nv.innerHTML=[['r','Resumen'],['m','Meses'],['t','Tablas']].map(x=>`<button class="${tab==x[0]&&!mo?'on':''}" onclick="tab='${x[0]}';mo=0;R()">${x[1]}</button>`).join('')}
+R();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>
