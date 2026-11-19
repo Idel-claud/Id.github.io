@@ -30,10 +30,10 @@ th{background:var(--a);color:#fff}td:first-child,th:first-child{text-align:left}
 <script>
 const C=["CTO interior","CTO int. demanda","CTO fachada","CTO arqueta","CTO poste","CTO azotea","CTO patio","CDPs","Empalmes","Fusiones","Potencia"];
 const M=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-const DEF={y:new Date().getFullYear(),n:["Trabajador 1","Trabajador 2","Trabajador 3"],b:[0,0,0],
+const DEF={eq:'',pe:[],y:new Date().getFullYear(),n:["Trabajador 1","Trabajador 2","Trabajador 3"],b:[0,0,0],
 tr:[[0,0],[.6,0],[1,0],[1.1,100],[1.2,200],[1.3,300],[1.4,400]],
 pen:[[0,0,200],[0,100,300],[0,200,400],[0,300,null],[0,400,null]],ob:[2,3,4.5,3,5,5,5,7.5,4,90,30],md:15,m:{}};
-let S;try{S=JSON.parse(localStorage.getItem('fv1'))}catch(e){}S=S||DEF;
+let S;try{S=JSON.parse(localStorage.getItem('fv1'))}catch(e){}S=S||DEF;S.pe=S.pe||[];
 let tab='r',mo=0,sub='g',wk=0,open=new Set();
 const save=()=>localStorage.setItem('fv1',JSON.stringify(S)),p2=n=>String(n).padStart(2,'0'),ym=(y,m)=>y+'-'+p2(m);
 const num=v=>+String(v).replace(',','.')||0,esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -56,20 +56,20 @@ const prod=m=>C.map((_,k)=>m?Object.values(m.d).reduce((s,d)=>s+d.p[k],0):0);
 // ---- setters
 const sd=(k,dt,f,i,el)=>{const d=gd(k,dt);const v=el.type=='checkbox'?el.checked:f=='n'?el.value:num(el.value);i<0?d[f]=v:d[f][i]=v;save();R()};
 const st=(k,w,f,el)=>{const t=gm(k).t[w];t[f]=el.type=='checkbox'?el.checked:f=='v'?(el.value===''?null:num(el.value)):num(el.value);save();R()};
-const ss=(f,i,el)=>{if(f=='n')S.n[i]=el.value;else if(f=='md')S.md=num(el.value);else S[f][i]=num(el.value);save();R()};
+const ss=(f,i,el)=>{if(f=='n')S.n[i]=el.value;else if(f=='eq')S.eq=el.value;else if(f=='md')S.md=num(el.value);else S[f][i]=num(el.value);save();R()};
 const sy=n=>{S.y+=n;save();R()},tg=d=>{open.has(d)?open.delete(d):open.add(d);R()};
 const stt=(i,c,el)=>{S.tr[i][c]=c?num(el.value):num(el.value)/100;save();R()};
 const sp=(r,c,el)=>{const v=el.value.trim();S.pen[r][c]=(v===''||v=='*')?null:num(v);save();R()};
 const exp=()=>{const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fusionador-copia-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
-const imp=el=>{const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!d.m||!d.n||!d.tr||!d.pen||!d.ob)throw 0;if(!confirm('Esto reemplazará todos los datos actuales. ¿Continuar?')){el.value='';return}S=d;save();R();alert('Copia importada.')}catch(e){alert('El archivo no es una copia válida.')}};r.readAsText(f)};
+const imp=el=>{const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!d.m||!d.n||!d.tr||!d.pen||!d.ob)throw 0;if(!confirm('Esto reemplazará todos los datos actuales. ¿Continuar?')){el.value='';return}S=d;S.pe=S.pe||[];save();R();alert('Copia importada.')}catch(e){alert('El archivo no es una copia válida.')}};r.readAsText(f)};
 // ---- vistas
 const inp=(l,v,fn)=>`<label class=f>${l}<input inputmode=decimal value="${v||''}" onchange="${fn}"></label>`;
 const lbl=d=>new Date(d+'T12:00').toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'2-digit'});
 const COL=['#1F4E9E','#E67E22','#2E7D32','#C62828','#6A1B9A','#00838F','#8D6E63','#AD1457','#9E9D24','#455A64'];
-function bars(t,lb,se){const mx=Math.max(1,...se.flatMap(s=>s.v)),gw=se.length*11+10,W=lb.length*gw+10,H=150;
-let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+34} font-size=9>`;
-lb.forEach((l,i)=>{se.forEach((q,j)=>{const h=q.v[i]/mx*H;s+=`<rect x=${i*gw+5+j*11} y=${H+14-h} width=10 height=${h} fill=${COL[j%10]}></rect>`});s+=`<text x=${i*gw+5} y=${H+28}>${l}</text>`});
-return s+`</svg></div><small>${se.map((q,j)=>`<span style="color:${COL[j%10]}">■</span> ${esc(q.n)}`).join(' &nbsp;')}</small>`}
+function bars(t,lb,se){const mx=Math.max(1,...se.flatMap(s=>s.v)),one=se.length==1,bw=one?30:12,gw=se.length*(bw+1)+10,W=lb.length*gw+10,H=150,P=one?22:44;
+let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+P+20} font-size=9>`;
+lb.forEach((l,i)=>{se.forEach((q,j)=>{const v=q.v[i],h=v/mx*H,x=i*gw+5+j*(bw+1),y=P+H-h;s+=`<rect x=${x} y=${y} width=${bw} height=${h} fill=${COL[j%10]}></rect>`;if(v)s+=one?`<text x=${x+bw/2} y=${y-3} text-anchor=middle>${nf(v)}</text>`:`<text transform="translate(${x+bw/2+3},${y-3}) rotate(-90)" font-size=8>${nf(v)}</text>`});s+=`<text x=${i*gw+5} y=${P+H+14}>${l}</text>`});
+return s+`</svg></div><small>${se.length>1?se.map((q,j)=>`<span style="color:${COL[j%10]}">■</span> ${esc(q.n)}`).join(' &nbsp;'):''}</small>`}
 function barsC(t,lb,v){const mx=Math.max(1,...v),gw=46,W=lb.length*gw+70,H=150;let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+75} font-size=10>`;
 lb.forEach((l,i)=>{const h=v[i]/mx*H,x=i*gw+8;s+=`<rect x=${x} y=${H+14-h} width=32 height=${h} fill=${COL[i%10]}></rect><text x=${x+16} y=${H+10-h} text-anchor=middle>${nf(v[i])}</text><text transform="translate(${x+14},${H+26}) rotate(40)" fill="${COL[i%10]}">${l}</text>`});return s+'</svg></div>'}
 function dayCard(k,dt,i){const d=(S.m[k]&&S.m[k].d[dt])||mk(),n=nt(d),p=pd(d),er=!n&&d.p.some(v=>v>0),op=open.has(dt),a=`'${k}','${dt}'`;
@@ -88,7 +88,7 @@ function vMes(){const k=ym(S.y,mo),m=S.m[k];return`<div class=tabs>${[['g','Regi
 function vLista(){return M.map((n,i)=>{const m=S.m[ym(S.y,i+1)];return`<div class=c onclick="mo=${i+1};sub='g';R()"><b>${n}</b>${[0,1,2].map(w=>{const r=calc(m,w);return`<div class=sp><span>${esc(S.n[w])}</span><span>${r.dt?ic(r.T)+' '+pc(r.T)+' &nbsp;':''}<b>${eur(r.tot)}</b></span></div>`}).join('')}</div>`}).join('')}
 function vRes12(){const yr=w=>M.map((_,i)=>calc(S.m[ym(S.y,i+1)],w)),Y=yr(wk),a=Y.filter(r=>r.dt),su=f=>Y.reduce((s,r)=>s+r[f],0),all=[0,1,2].map(yr),pr=M.map((_,i)=>prod(S.m[ym(S.y,i+1)]));
 const avg=a.length?a.reduce((s,r)=>s+r.T,0)/a.length:null,best=a.length?a.reduce((b,r)=>r.T>b.T?r:b):null;
-return`<div class=c><h3>Ajustes</h3><div class=row><button class=chip onclick="sy(-1)">–</button><b>${S.y}</b><button class=chip onclick="sy(1)">+</button></div>${[0,1,2].map(i=>`<div class=row><label class=f>Nombre<input value="${esc(S.n[i])}" onchange="ss('n',${i},this)"></label>${inp('Variable 100 % (€)',S.b[i],`ss('b',${i},this)`)}</div>`).join('')}</div>
+return`<div class=c><h3>Ajustes</h3><label class=f>Nombre del equipo<input value="${esc(S.eq||'')}" onchange="ss('eq',0,this)"></label><div class=row><button class=chip onclick="sy(-1)">–</button><b>${S.y}</b><button class=chip onclick="sy(1)">+</button></div>${[0,1,2].map(i=>`<div class=row><label class=f>Nombre<input value="${esc(S.n[i])}" onchange="ss('n',${i},this)"></label>${inp('Variable 100 % (€)',S.b[i],`ss('b',${i},this)`)}</div>`).join('')}</div>
 <div>${[0,1,2].map(i=>`<button class="chip ${wk==i?'on':''}" onclick="wk=${i};R()">${esc(S.n[i])}</button>`).join('')}</div><br>
 <div class=c><h3>Año ${S.y} – ${esc(S.n[wk])}</h3><div class=t><table><tr><th>Mes<th>Días<th>H.extra<th>Consec.<th>Variable<th>M.dieta<th>Dietas<th>TOTAL</tr>${Y.map((r,i)=>`<tr><td>${M[i]}<td>${r.dt}<td>${nf(r.hx)}<td>${r.dt?ic(r.T)+' '+pc(r.T):''}<td>${eur(r.tr)}<td>${eur(r.me)}<td>${eur(r.di)}<td><b>${eur(r.tot)}</b>`).join('')}<tr class=tot><td>TOTAL<td>${su('dt')}<td>${nf(su('hx'))}<td>${avg==null?'':ic(avg)+' '+pc(avg)}<td>${eur(su('tr'))}<td>${eur(su('me'))}<td>${eur(su('di'))}<td>${eur(su('tot'))}</tr></table></div><small>Las horas extra solo se registran (no suman al total).</small></div>
 <div class=c><h3>Estadísticas</h3><div class=sp><span>Mejor mes</span><b>${best?M[Y.indexOf(best)]+' ('+pc(best.T)+')':'-'}</b></div><div class=sp><span>Meses con 100 % o más</span><b>${a.filter(r=>r.T>=1).length}</b></div><div class=sp><span>TOTAL EQUIPO a cobrar en el año</span><b>${eur(all.reduce((s,y)=>s+y.reduce((q,r)=>q+r.tot,0),0))}</b></div></div>
@@ -97,8 +97,15 @@ function vTablas(){return`<div class=c><h3>Gratificación por consecución</h3>$
 <div class=c><h3>Penalización por reparos (€)</h3><small>0 = solo aviso · * = sin importe fijado</small>${S.pen.map((r,i)=>`<b>${i+1} reparo(s)${i==4?' o más':''}</b><div class=row>${r.map((v,j)=>`<label class=f>${['Baja','Media','Alta'][j]}<input value="${v==null?'*':v}" onchange="sp(${i},${j},this)"></label>`).join('')}</div>`).join('')}</div>
 <div class=c><h3>Objetivo diario por persona</h3><div class=row>${C.map((c,i)=>inp(c,S.ob[i],`ss('ob',${i},this)`)).join('')}</div></div>
 <div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div><div class=c><h3>Copia de seguridad</h3><small>Los datos solo están en este dispositivo. Descarga una copia para guardarla o pasarla a otro móvil.</small><br><div class=row><button class=chip onclick="exp()">⬇ Exportar copia</button><label class=chip>⬆ Importar copia<input type=file accept=".json,application/json" hidden onchange="imp(this)"></label></div></div>`}
-function R(){const T={r:'Resumen anual',m:'Meses',t:'Tablas'};ti.textContent=mo?M[mo-1]+' '+S.y:T[tab];bk.hidden=!mo;
-app.innerHTML=mo?vMes():tab=='r'?vRes12():tab=='m'?vLista():vTablas();
-nv.innerHTML=[['r','Resumen'],['m','Meses'],['t','Tablas']].map(x=>`<button class="${tab==x[0]&&!mo?'on':''}" onclick="tab='${x[0]}';mo=0;R()">${x[1]}</button>`).join('')}
+let pfl='t';
+const sP=(i,f,el)=>{S.pe[i][f]=el.value;save();R()},tgP=i=>{S.pe[i].e=!S.pe[i].e;save();R()},dP=i=>{if(confirm('¿Borrar este material?')){S.pe.splice(i,1);save();R()}};
+const addP=()=>{const g=i=>document.getElementById(i),n=g('mn').value.trim();if(!n){alert('Escribe el nombre del material');return}S.pe.push({n,q:g('mq').value.trim(),f:g('mf').value,e:false});save();R()};
+function vPed(){const hoy=new Date().toLocaleDateString('sv-SE'),np=S.pe.filter(x=>!x.e).length,L=S.pe.map((x,i)=>({x,i})).filter(o=>pfl=='t'||(pfl=='e')==!!o.x.e).sort((a,b)=>(a.x.e?1:0)-(b.x.e?1:0)||(a.x.f||'9').localeCompare(b.x.f||'9'));
+return`<div class=c><h3>Añadir material al próximo pedido</h3><div class=row><label class=f style="flex:2">Material<input id=mn></label><label class=f>Cantidad<input id=mq></label><label class=f>Fecha aprox. del pedido<input id=mf type=date></label></div><br><button class="chip on" onclick="addP()">＋ Añadir</button></div>
+<div>${[['t','Todos'],['p','Pendientes ('+np+')'],['e','Pedidos ('+(S.pe.length-np)+')']].map(f=>`<button class="chip ${pfl==f[0]?'on':''}" onclick="pfl='${f[0]}';R()">${f[1]}</button>`).join('')}</div><br>`
++(L.length?L.map(({x,i})=>{const od=!x.e&&x.f&&x.f<=hoy;return`<div class=c style="border-left:5px solid ${x.e?'#2e7d32':od?'#d32f2f':'#f9a825'}"><div class=row><label class=f style="flex:2">Material<input value="${esc(x.n)}" onchange="sP(${i},'n',this)"></label><label class=f>Cantidad<input value="${esc(x.q)}" onchange="sP(${i},'q',this)"></label><label class=f>Fecha aprox.<input type=date value="${x.f||''}" onchange="sP(${i},'f',this)"></label></div><div class=row><button class="chip ${x.e?'on':''}" onclick="tgP(${i})">${x.e?'✔ Ya pedido':'⏳ Pendiente de pedir'}</button><button class=chip onclick="dP(${i})">🗑 Borrar</button>${od?'<b class=r>Fecha vencida</b>':''}</div></div>`}).join(''):'<small>No hay materiales en esta lista.</small>')}
+function R(){const T={r:'Resumen anual',m:'Meses',p:'Pedidos de material',t:'Tablas'};ti.textContent=(mo?M[mo-1]+' '+S.y:T[tab])+(S.eq?' · '+S.eq:'');bk.hidden=!mo;
+app.innerHTML=mo?vMes():tab=='r'?vRes12():tab=='m'?vLista():tab=='p'?vPed():vTablas();
+nv.innerHTML=[['r','Resumen'],['m','Meses'],['p','Pedidos'],['t','Tablas']].map(x=>`<button class="${tab==x[0]&&!mo?'on':''}" onclick="tab='${x[0]}';mo=0;R()">${x[1]}</button>`).join('')}
 R();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>
