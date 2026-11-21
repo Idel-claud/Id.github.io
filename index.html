@@ -2,29 +2,35 @@
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1F4E9E"><link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
 <title>Herramienta Fusionador</title><meta name="apple-mobile-web-app-title" content="Herramienta Fusionador">
 <style>
-:root{--a:#1F4E9E;--o:#E9EEF6}*{box-sizing:border-box}
-body{margin:0;font:14px system-ui,sans-serif;color:#1b1b1b;background:#f4f6fa;padding-bottom:64px}
+:root{--a:#1F4E9E;--h:#1F4E9E;--bg:#f4f6fa;--fg:#1b1b1b;--c:#fff;--o:#E9EEF6;--bd:#999;--t:#cfe0f5;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-t=l]){--h:#8ab4ff;--bg:#121212;--fg:#e8e8e8;--c:#1e1e1e;--o:#2a3447;--bd:#555;--t:#1f3556;color-scheme:dark}}
+:root[data-t=d]{--h:#8ab4ff;--bg:#121212;--fg:#e8e8e8;--c:#1e1e1e;--o:#2a3447;--bd:#555;--t:#1f3556;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font:14px system-ui,sans-serif;color:var(--fg);background:var(--bg);padding-bottom:64px}
 header{background:var(--a);color:#fff;padding:14px 12px;font-size:18px;font-weight:700;position:sticky;top:0;z-index:5}
-header button{float:right;background:none;border:0;color:#fff;font-size:18px}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid #ccc;z-index:5}
-nav button{flex:1;padding:14px 0;border:0;background:none;font-size:14px}nav .on{color:var(--a);font-weight:700;border-top:3px solid var(--a)}
+header button{float:right;background:none;border:0;color:#fff;font-size:18px;margin-left:6px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--c);border-top:1px solid var(--bd);z-index:5}
+nav button{flex:1;padding:14px 0;border:0;background:none;color:var(--fg);font-size:14px}nav .on{color:var(--h);font-weight:700;border-top:3px solid var(--a)}
 main{padding:10px;max-width:760px;margin:auto}
-.c{background:#fff;border-radius:10px;padding:10px;margin:0 0 10px;box-shadow:0 1px 3px #0002}
+.c{background:var(--c);border-radius:10px;padding:10px;margin:0 0 10px;box-shadow:0 1px 3px #0002}
 .c.o{background:var(--o)}.c.e{background:#d32f2f;color:#fff}.h{display:flex;justify-content:space-between;cursor:pointer}
-h3{margin:2px 0 8px;color:var(--a)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+h3{margin:2px 0 8px;color:var(--h)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .f{display:flex;flex-direction:column;flex:1;min-width:110px;font-size:11px;margin:3px 0}
-input,textarea,select{font:inherit;padding:7px;border:1px solid #999;border-radius:6px;width:100%}
+input,textarea,select{font:inherit;padding:7px;border:1px solid var(--bd);border-radius:6px;width:100%;background:var(--c);color:var(--fg)}
 input[type=checkbox]{width:auto}.sp{display:flex;justify-content:space-between;padding:2px 0}
 .t{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}td,th{padding:5px;white-space:nowrap;text-align:right}
-th{background:var(--a);color:#fff}td:first-child,th:first-child{text-align:left}tr:nth-child(even) td{background:var(--o)}tr.tot td{font-weight:700;background:#cfe0f5}
-.g{color:#2e7d32}.y{color:#f9a825}.r{color:#d32f2f}.chip{padding:6px 12px;border:1px solid var(--a);border-radius:16px;background:#fff;margin-right:6px}
-.chip.on{background:var(--a);color:#fff}small{display:block}.bar{overflow-x:auto}
-.tabs{display:flex;margin-bottom:8px}.tabs button{flex:1;padding:10px;border:0;border-bottom:3px solid #ccc;background:none}.tabs .on{border-color:var(--a);font-weight:700}
+th{background:var(--a);color:#fff}td:first-child,th:first-child{text-align:left}tr:nth-child(even) td{background:var(--o)}tr.tot td{font-weight:700;background:var(--t)}
+.g{color:#2e7d32}.y{color:#f9a825}.r{color:#d32f2f}.chip{padding:6px 12px;border:1px solid var(--a);border-radius:16px;background:var(--c);color:var(--fg);margin-right:6px}
+.chip.on{background:var(--a);color:#fff}small{display:block}.bar{overflow-x:auto}svg text:not([fill]){fill:var(--fg)}
+.tabs{display:flex;margin-bottom:8px}.tabs button{flex:1;padding:10px;border:0;border-bottom:3px solid #888;background:none;color:var(--fg)}.tabs .on{border-color:var(--a);font-weight:700}
+#rpt{display:none;color:#000;background:#fff;font-size:11px}#rpt h1{font-size:18px;color:#1F4E9E}#rpt h2{font-size:14px;color:#1F4E9E;margin:14px 0 4px;break-after:avoid}#rpt h3{color:#1F4E9E}
+#rpt table{font-size:10px}#rpt tr:nth-child(even) td{background:#eef2f9}#rpt svg{max-width:100%;height:auto}#rpt svg text:not([fill]){fill:#000}#rpt .bar{overflow:visible}
+@media print{body.pr{background:#fff;color:#000;padding:0}body.pr>*:not(#rpt){display:none!important}body.pr #rpt{display:block}@page{margin:12mm}}
 </style></head><body>
-<header><span id="ti"></span><button id="bk" onclick="mo=0;R()" hidden>←</button></header>
+<header><img src="icon-32.png" width=26 height=26 alt="" style="vertical-align:middle;margin-right:8px;border-radius:6px"><span id="ti"></span><button id="th" onclick="tm()" title="Modo claro/oscuro">🌓</button><button id="bk" onclick="mo=0;R()" hidden>←</button></header>
 <main id="app"></main>
 <nav id="nv"></nav>
 <script>
@@ -67,10 +73,10 @@ const inp=(l,v,fn)=>`<label class=f>${l}<input inputmode=decimal value="${v||''}
 const lbl=d=>new Date(d+'T12:00').toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'2-digit'});
 const COL=['#1F4E9E','#E67E22','#2E7D32','#C62828','#6A1B9A','#00838F','#8D6E63','#AD1457','#9E9D24','#455A64'];
 function bars(t,lb,se){const mx=Math.max(1,...se.flatMap(s=>s.v)),one=se.length==1,bw=one?30:12,gw=se.length*(bw+1)+10,W=lb.length*gw+10,H=150,P=one?22:44;
-let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+P+20} font-size=9>`;
+let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+P+20} viewBox="0 0 ${W} ${H+P+20}" font-size=9>`;
 lb.forEach((l,i)=>{se.forEach((q,j)=>{const v=q.v[i],h=v/mx*H,x=i*gw+5+j*(bw+1),y=P+H-h;s+=`<rect x=${x} y=${y} width=${bw} height=${h} fill=${COL[j%10]}></rect>`;if(v)s+=one?`<text x=${x+bw/2} y=${y-3} text-anchor=middle>${nf(v)}</text>`:`<text transform="translate(${x+bw/2+3},${y-3}) rotate(-90)" font-size=8>${nf(v)}</text>`});s+=`<text x=${i*gw+5} y=${P+H+14}>${l}</text>`});
 return s+`</svg></div><small>${se.length>1?se.map((q,j)=>`<span style="color:${COL[j%10]}">■</span> ${esc(q.n)}`).join(' &nbsp;'):''}</small>`}
-function barsC(t,lb,v){const mx=Math.max(1,...v),gw=46,W=lb.length*gw+70,H=150;let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+75} font-size=10>`;
+function barsC(t,lb,v){const mx=Math.max(1,...v),gw=46,W=lb.length*gw+70,H=150;let s=`<h3>${t}</h3><div class=bar><svg width=${W} height=${H+75} viewBox="0 0 ${W} ${H+75}" font-size=10>`;
 lb.forEach((l,i)=>{const h=v[i]/mx*H,x=i*gw+8;s+=`<rect x=${x} y=${H+14-h} width=32 height=${h} fill=${COL[i%10]}></rect><text x=${x+16} y=${H+10-h} text-anchor=middle>${nf(v[i])}</text><text transform="translate(${x+14},${H+26}) rotate(40)" fill="${COL[i%10]}">${l}</text>`});return s+'</svg></div>'}
 function dayCard(k,dt,i){const d=(S.m[k]&&S.m[k].d[dt])||mk(),n=nt(d),p=pd(d),er=!n&&d.p.some(v=>v>0),op=open.has(dt),a=`'${k}','${dt}'`;
 let h=`<div class="c ${er?'e':i%2?'o':''}"><div class=h onclick="tg('${dt}')"><b>${lbl(dt)}</b><span>${n} trab. ${ic(p)} ${p==null?'':pc(p)} ${op?'▲':'▼'}</span></div>`;
@@ -92,11 +98,11 @@ return`<div class=c><h3>Ajustes</h3><label class=f>Nombre del equipo<input value
 <div>${[0,1,2].map(i=>`<button class="chip ${wk==i?'on':''}" onclick="wk=${i};R()">${esc(S.n[i])}</button>`).join('')}</div><br>
 <div class=c><h3>Año ${S.y} – ${esc(S.n[wk])}</h3><div class=t><table><tr><th>Mes<th>Días<th>H.extra<th>Consec.<th>Variable<th>M.dieta<th>Dietas<th>TOTAL</tr>${Y.map((r,i)=>`<tr><td>${M[i]}<td>${r.dt}<td>${nf(r.hx)}<td>${r.dt?ic(r.T)+' '+pc(r.T):''}<td>${eur(r.tr)}<td>${eur(r.me)}<td>${eur(r.di)}<td><b>${eur(r.tot)}</b>`).join('')}<tr class=tot><td>TOTAL<td>${su('dt')}<td>${nf(su('hx'))}<td>${avg==null?'':ic(avg)+' '+pc(avg)}<td>${eur(su('tr'))}<td>${eur(su('me'))}<td>${eur(su('di'))}<td>${eur(su('tot'))}</tr></table></div><small>Las horas extra solo se registran (no suman al total).</small></div>
 <div class=c><h3>Estadísticas</h3><div class=sp><span>Mejor mes</span><b>${best?M[Y.indexOf(best)]+' ('+pc(best.T)+')':'-'}</b></div><div class=sp><span>Meses con 100 % o más</span><b>${a.filter(r=>r.T>=1).length}</b></div><div class=sp><span>TOTAL EQUIPO a cobrar en el año</span><b>${eur(all.reduce((s,y)=>s+y.reduce((q,r)=>q+r.tot,0),0))}</b></div></div>
-<div class=c>${bars('Consecución mensual (%)',M.map(x=>x.slice(0,3)),[0,1,2].map(w=>({n:S.n[w],v:all[w].map(r=>r.dt?r.T*100:0)})))}${bars('CTOs, CDPs y empalmes del equipo por mes',M.map(x=>x.slice(0,3)),C.slice(0,9).map((c,k)=>({n:c,v:pr.map(p=>p[k])})))}${bars('Fusiones por mes',M.map(x=>x.slice(0,3)),[{n:'Fusiones',v:pr.map(p=>p[9])}])}</div>`}
+<div class=c>${bars('Consecución mensual (%)',M.map(x=>x.slice(0,3)),[0,1,2].map(w=>({n:S.n[w],v:all[w].map(r=>r.dt?r.T*100:0)})))}${bars('CTOs, CDPs y empalmes del equipo por mes',M.map(x=>x.slice(0,3)),C.slice(0,9).map((c,k)=>({n:c,v:pr.map(p=>p[k])})))}${bars('Fusiones por mes',M.map(x=>x.slice(0,3)),[{n:'Fusiones',v:pr.map(p=>p[9])}])}</div>${vInf()}`}
 function vTablas(){return`<div class=c><h3>Gratificación por consecución</h3>${S.tr.map((t,i)=>`<div class=row>${inp('Desde (%)',Math.round(t[0]*10000)/100,`stt(${i},0,this)`)}${inp('Importe €',t[1],`stt(${i},1,this)`)}</div>`).join('')}</div>
 <div class=c><h3>Penalización por reparos (€)</h3><small>0 = solo aviso · * = sin importe fijado</small>${S.pen.map((r,i)=>`<b>${i+1} reparo(s)${i==4?' o más':''}</b><div class=row>${r.map((v,j)=>`<label class=f>${['Baja','Media','Alta'][j]}<input value="${v==null?'*':v}" onchange="sp(${i},${j},this)"></label>`).join('')}</div>`).join('')}</div>
 <div class=c><h3>Objetivo diario por persona</h3><div class=row>${C.map((c,i)=>inp(c,S.ob[i],`ss('ob',${i},this)`)).join('')}</div></div>
-<div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div><div class=c><h3>Copia de seguridad</h3><small>Los datos solo están en este dispositivo. Descarga una copia para guardarla o pasarla a otro móvil.</small><br><div class=row><button class=chip onclick="exp()">⬇ Exportar copia</button><label class=chip>⬆ Importar copia<input type=file accept=".json,application/json" hidden onchange="imp(this)"></label></div></div>`}
+<div class=c><h3>Media dieta</h3>${inp('Importe por trabajador y día (€ bruto)',S.md,`ss('md',0,this)`)}<small>Se cobra a mes vencido.</small></div><div class=c><h3>Apariencia</h3><div class=row>${[['a','🌓 Automático'],['l','☀️ Claro'],['d','🌙 Oscuro']].map(x=>`<button class="chip ${TH==x[0]?'on':''}" onclick="sT('${x[0]}')">${x[1]}</button>`).join('')}</div><small>Automático sigue el modo del móvil.</small></div><div class=c><h3>Copia de seguridad</h3><small>Los datos solo están en este dispositivo. Descarga una copia para guardarla o pasarla a otro móvil.</small><br><div class=row><button class=chip onclick="exp()">⬇ Exportar copia</button><label class=chip>⬆ Importar copia<input type=file accept=".json,application/json" hidden onchange="imp(this)"></label></div></div>`}
 let pfl='t';
 function mig(){const a=S.pe||[],old=a.filter(x=>!x.it),out=a.filter(x=>x.it),mk=(l,e)=>{if(l.length)out.push({f:l.map(x=>x.f).filter(Boolean).sort()[0]||'',e,it:l.map(x=>({n:x.n,q:x.q}))})};mk(old.filter(x=>!x.e),false);mk(old.filter(x=>x.e),true);S.pe=out}
 const npP=()=>{S.pe.push({f:'',e:false,it:[]});save();R()},sPd=(i,el)=>{S.pe[i].f=el.value;save();R()},tgP=i=>{S.pe[i].e=!S.pe[i].e;save();R()},dP=i=>{if(confirm('¿Borrar este pedido completo?')){S.pe.splice(i,1);save();R()}};
@@ -108,8 +114,31 @@ return`<div class=row><button class="chip on" onclick="npP()">＋ Nuevo pedido</
 <label class=f>Fecha aprox. del pedido ${od?'<b class=r>(fecha vencida)</b>':''}<input type=date value="${x.f||''}" onchange="sPd(${i},this)"></label>
 ${x.it.map((m,j)=>`<div class=row><label class=f style="flex:2">Material<input value="${esc(m.n)}" onchange="sM(${i},${j},'n',this)"></label><label class=f>Cantidad<input value="${esc(m.q)}" onchange="sM(${i},${j},'q',this)"></label><button class=chip onclick="dM(${i},${j})">✕</button></div>`).join('')}
 <div class=row><label class=f style="flex:2">Añadir material<input id=mn${i}></label><label class=f>Cantidad<input id=mq${i}></label><button class="chip on" onclick="addM(${i})">＋</button></div></div>`}).join(''):'<small>No hay pedidos en esta lista. Pulsa «Nuevo pedido» para crear el primero.</small>')}
+let TH=localStorage.getItem('fvt')||'a';
+const aT=()=>{document.documentElement.dataset.t=TH;th.textContent={a:'🌓',l:'☀️',d:'🌙'}[TH]},sT=v=>{TH=v;localStorage.setItem('fvt',v);aT();R()},tm=()=>sT({a:'l',l:'d',d:'a'}[TH]);
+let RP={p:'a',m:new Date().getMonth()+1,d:new Date().toLocaleDateString('sv-SE'),w:'t'};
+const iso=d=>d.toLocaleDateString('sv-SE'),sr=(f,el)=>{RP[f]=el.value;R()};
+function range(){const p=RP.p,m=+RP.m;if(p=='a')return[S.y+'-01-01',S.y+'-12-31','Año '+S.y];if(p=='m')return[ym(S.y,m)+'-01',ym(S.y,m)+'-31',M[m-1]+' '+S.y];
+const x=new Date((RP.d||iso(new Date()))+'T12:00');if(p=='d')return[iso(x),iso(x),x.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})];
+const a=new Date(x);a.setDate(x.getDate()-(x.getDay()+6)%7);const b=new Date(a);b.setDate(a.getDate()+6);return[iso(a),iso(b),'Semana del '+a.toLocaleDateString('es-ES')+' al '+b.toLocaleDateString('es-ES')]}
+function agg(ds,w){const dt=ds.filter(d=>d.w[w]).length,cs=C.map((_,k)=>{const o=S.ob[k]*dt;let me=0;ds.forEach(d=>{const n=nt(d);if(n&&d.w[w])me+=d.p[k]/n});return{o,me,p:o?me/o:0}}),dm=ds.filter(d=>d.w[w]&&d.md[w]).length;
+return{dt,cs,T:cs.reduce((s,c)=>s+c.p,0),dm,me:dm*S.md,di:ds.reduce((s,d)=>s+d.di[w],0),hx:ds.reduce((s,d)=>s+d.hx[w],0),dh:ds.filter(d=>d.hx[w]>0).length}}
+const tbl=(h,r)=>`<table><tr>${h.map(x=>`<th>${x}`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}`).join('')}</tr>`).join('')}</table>`;
+function repHTML(){const[a,b,lab]=range(),ds=Object.values(S.m).flatMap(m=>Object.entries(m.d)).filter(e=>e[0]>=a&&e[0]<=b).sort((x,y)=>x[0]<y[0]?-1:1),dd=ds.map(e=>e[1]),W=RP.w=='t'?[0,1,2]:[+RP.w],py=RP.p=='a'||RP.p=='m',ms=RP.p=='a'?[1,2,3,4,5,6,7,8,9,10,11,12]:[+RP.m],pt=C.map((_,k)=>dd.reduce((s,d)=>s+d.p[k],0)),ix=C.map((_,i)=>i).filter(i=>i!=9);
+let h=`<h1><img src="icon-192.png" height=26 style="vertical-align:middle;border-radius:5px"> Herramienta Fusionador · Informe</h1><p><b>Equipo:</b> ${esc(S.eq||'-')} &nbsp; <b>Periodo:</b> ${lab} &nbsp; <b>Trabajador:</b> ${RP.w=='t'?'Todos':esc(S.n[RP.w])} &nbsp; <b>Generado:</b> ${new Date().toLocaleString('es-ES')}</p>`;
+h+='<h2>Resumen por trabajador</h2>'+tbl(['Trabajador','Días','Consecución','Horas extra','Media dieta','Dietas','Variable','TOTAL a cobrar'],W.map(w=>{const g=agg(dd,w),y=py?ms.map(i=>calc(S.m[ym(S.y,i)],w)):[],sm=f=>y.reduce((s,r)=>s+r[f],0);return[esc(S.n[w]),g.dt,g.dt?ic(g.T)+' '+pc(g.T):'-',nf(g.hx)+' ('+g.dh+' d)',g.dm+' d · '+eur(g.me),eur(g.di),py?eur(sm('tr')):'-',py?eur(sm('tot')):'-']}));
+if(!py)h+='<small>El variable y el total a cobrar se calculan por mes completo, por eso no aparecen en informes semanales o diarios.</small>';
+h+='<h2>Producción del equipo en el periodo</h2>'+tbl(['Concepto','Total'],C.map((c,i)=>[c,nf(pt[i])]))+barsC('Producción (sin fusiones)',ix.map(i=>C[i]),ix.map(i=>pt[i]));
+W.forEach(w=>{const g=agg(dd,w);h+=`<h2>Detalle por concepto · ${esc(S.n[w])}</h2>`+tbl(['Concepto','Medición','Objetivo','% consecución'],g.cs.map((c,i)=>[C[i],nf(c.me),nf(c.o),pc(c.p)]))});
+if(RP.p=='a')h+='<h2>Evolución mensual</h2>'+tbl(['Mes',...W.flatMap(w=>[esc(S.n[w])+' consec.',esc(S.n[w])+' total'])],M.map((n,i)=>[n,...W.flatMap(w=>{const r=calc(S.m[ym(S.y,i+1)],w);return[r.dt?ic(r.T)+' '+pc(r.T):'-',eur(r.tot)]})]))+bars('Consecución mensual (%)',M.map(x=>x.slice(0,3)),W.map(w=>({n:S.n[w],v:M.map((_,i)=>{const r=calc(S.m[ym(S.y,i+1)],w);return r.dt?r.T*100:0})})));
+else h+='<h2>Detalle diario</h2>'+(ds.length?tbl(['Fecha','Trab.','% del día','CTOs','CDPs','Empalmes','Fusiones','Potencia','Observaciones'],ds.map(([k,d])=>{const q=pd(d);return[lbl(k),nt(d),q==null?'-':ic(q)+' '+pc(q),nf(d.p.slice(0,7).reduce((x,y)=>x+y,0)),nf(d.p[7]),nf(d.p[8]),nf(d.p[9]),nf(d.p[10]),esc(d.n)]})):'<p>Sin datos en este periodo.</p>');
+if(S.pe.length)h+='<h2>Pedidos de material</h2>'+tbl(['Pedido','Fecha aprox.','Estado','Materiales'],S.pe.map((x,i)=>['Pedido '+(i+1),x.f||'-',x.e?'Ya pedido':'Pendiente',x.it.map(m=>esc(m.n)+(m.q?' ('+esc(m.q)+')':'')).join(', ')||'-']));
+return h}
+function genPDF(){let r=document.getElementById('rpt');if(!r){r=document.createElement('div');r.id='rpt';document.body.appendChild(r)}r.innerHTML=repHTML();document.body.classList.add('pr');const t=document.title;document.title='Informe Fusionador - '+range()[2];setTimeout(()=>{window.print();document.title=t},150)}
+addEventListener('afterprint',()=>document.body.classList.remove('pr'));
+const vInf=()=>`<div class=c><h3>Informe en PDF</h3><div class=row><label class=f>Periodo<select onchange="sr('p',this)">${[['a','Anual'],['m','Mensual'],['s','Semanal'],['d','Diario']].map(x=>`<option value=${x[0]} ${RP.p==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></label>${RP.p=='m'?`<label class=f>Mes<select onchange="sr('m',this)">${M.map((n,i)=>`<option value=${i+1} ${RP.m==i+1?'selected':''}>${n} ${S.y}</option>`).join('')}</select></label>`:RP.p=='a'?`<label class=f>Año<input value=${S.y} disabled></label>`:`<label class=f>${RP.p=='s'?'Un día de la semana':'Día'}<input type=date value="${RP.d}" onchange="sr('d',this)"></label>`}<label class=f>Trabajador<select onchange="sr('w',this)"><option value=t>Todos</option>${[0,1,2].map(i=>`<option value=${i} ${RP.w==i?'selected':''}>${esc(S.n[i])}</option>`).join('')}</select></label></div><br><button class="chip on" onclick="genPDF()">📄 Generar PDF</button><small>Se abre el diálogo de impresión: elige «Guardar como PDF».</small></div>`;
 function R(){const T={r:'Resumen anual',m:'Meses',p:'Pedidos de material',t:'Tablas'};ti.textContent=(mo?M[mo-1]+' '+S.y:T[tab])+(S.eq?' · '+S.eq:'');bk.hidden=!mo;
 app.innerHTML=mo?vMes():tab=='r'?vRes12():tab=='m'?vLista():tab=='p'?vPed():vTablas();
 nv.innerHTML=[['r','Resumen'],['m','Meses'],['p','Pedidos'],['t','Tablas']].map(x=>`<button class="${tab==x[0]&&!mo?'on':''}" onclick="tab='${x[0]}';mo=0;R()">${x[1]}</button>`).join('')}
-R();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+aT();R();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>
